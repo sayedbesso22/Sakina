@@ -181,27 +181,6 @@
   #bottomTabs button svg{ width:22px; height:22px; }
   #bottomTabs button.active{ color:var(--gold); }
 
-  #moreSheet{ display:none; position:fixed; inset:0; z-index:70; }
-  #moreSheet.open{ display:block; }
-  #moreSheetBackdrop{ position:absolute; inset:0; background:rgba(14,46,43,0.5); }
-  #moreSheetPanel{
-    position:absolute; right:0; left:0; bottom:0;
-    background:var(--parchment); border-radius:22px 22px 0 0;
-    padding:10px 16px calc(20px + env(safe-area-inset-bottom));
-    box-shadow:0 -10px 30px -10px rgba(14,46,43,0.4);
-  }
-  .more-sheet-handle{
-    width:40px; height:4px; background:var(--parchment-2); border-radius:4px;
-    margin:8px auto 14px;
-  }
-  #moreSheetPanel button{
-    width:100%; display:flex; align-items:center; gap:12px;
-    background:#fff; border:1px solid var(--parchment-2); border-radius:14px;
-    padding:14px 16px; margin-bottom:10px; font-family:'Cairo'; font-weight:600;
-    font-size:0.95rem; color:var(--night); cursor:pointer;
-  }
-  #moreSheetPanel button svg{ width:20px; height:20px; color:var(--gold); flex-shrink:0; }
-
   @media (max-width:760px){
     header nav#tabs{ display:none; }
     #bottomTabs{ display:flex; }
@@ -683,7 +662,6 @@
       <button data-tab="quran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1-5-1-7 0v11c2-1 5-1 7 0 2-1 5-1 7 0V6c-2-1-5-1-7 0z"/><path d="M12 6v11"/></svg><span>القرآن الكريم</span></button>
       <button data-tab="adhkar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="4" cy="12" r="1.5"/><circle cx="8.3" cy="8.5" r="1.5"/><circle cx="12.7" cy="7" r="1.5"/><circle cx="17" cy="8.5" r="1.5"/><circle cx="20" cy="12" r="1.5"/></svg><span>الأذكار</span></button>
       <button data-tab="prayer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><span>مواقيت الصلاة</span></button>
-      <button data-tab="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-6a7 7 0 0 1 14 0v6"/><path d="M3 20h18"/><path d="M12 3v3"/></svg><span>تعلم الصلاة</span></button>
       <button data-tab="nasheed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>أناشيد</span></button>
     </nav>
   </div>
@@ -695,17 +673,8 @@
   <button data-tab="quran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1-5-1-7 0v11c2-1 5-1 7 0 2-1 5-1 7 0V6c-2-1-5-1-7 0z"/><path d="M12 6v11"/></svg><span>القرآن</span></button>
   <button data-tab="adhkar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="4" cy="12" r="1.5"/><circle cx="8.3" cy="8.5" r="1.5"/><circle cx="12.7" cy="7" r="1.5"/><circle cx="17" cy="8.5" r="1.5"/><circle cx="20" cy="12" r="1.5"/></svg><span>الأذكار</span></button>
   <button data-tab="prayer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><span>الصلاة</span></button>
-  <button id="moreTabBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg><span>المزيد</span></button>
+  <button data-tab="nasheed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>أناشيد</span></button>
 </nav>
-
-<div id="moreSheet">
-  <div id="moreSheetBackdrop"></div>
-  <div id="moreSheetPanel">
-    <div class="more-sheet-handle"></div>
-    <button data-tab="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-6a7 7 0 0 1 14 0v6"/><path d="M3 20h18"/><path d="M12 3v3"/></svg><span>تعلم الصلاة</span></button>
-    <button data-tab="nasheed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>أناشيد بدون موسيقى</span></button>
-  </div>
-</div>
 
 <main>
 
@@ -805,10 +774,23 @@
         <button id="adhanTestBtn" class="chip">تجربة الصوت</button>
       </div>
       <div id="adhanStatus" style="color:var(--ink-soft); font-size:0.85rem; margin-top:8px;"></div>
+
+      <div class="mini-title" style="font-size:0.92rem;">🔍 دوّر على أذان بصوت شيخ معيّن</div>
+      <p style="color:var(--ink-soft); font-size:0.85rem; line-height:1.8;">
+        اكتب اسم الشيخ (مثلاً: النقشبندي، ياسر الدوسري) ودوّر جوه يوتيوب من هنا مباشرة، واستخدمه كأذان. بيستخدم نفس مفتاح يوتيوب اللي في قسم الأناشيد.
+        ملحوظة: أذان يوتيوب ممكن مايشتغلش تلقائي 100% بسبب سياسات المتصفح — هيظهرلك زرار تشغيل يدوي وقت الصلاة لو حصل كده.
+      </p>
+      <div class="adhan-row">
+        <input type="text" id="adhanSearchInput" placeholder="اسم الشيخ...">
+        <button id="adhanSearchBtn" class="chip">بحث</button>
+      </div>
+      <div id="adhanSearchResults" class="nasheed-search-results"></div>
+
       <div class="adhan-row" style="margin-top:14px;">
-        <input type="text" id="customAdhanUrl" placeholder="أو الصق رابط ملف أذان MP3 خاص بك (اختياري)" style="flex:1; min-width:220px; font-family:'Cairo'; padding:9px 12px; border-radius:12px; border:1.5px solid var(--parchment-2);">
+        <input type="text" id="customAdhanUrl" placeholder="أو الصق رابط ملف أذان MP3 مباشر (اختياري)" style="flex:1; min-width:220px; font-family:'Cairo'; padding:9px 12px; border-radius:12px; border:1.5px solid var(--parchment-2);">
         <button id="customAdhanSave" class="chip">استخدام هذا الرابط</button>
       </div>
+      <div id="adhanYoutubeFallback" style="display:none; margin-top:14px;"></div>
     </div>
 
     <div class="qibla-card">
@@ -828,12 +810,8 @@
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- LEARN TO PRAY TAB -->
-  <section id="tab-learn" style="display:none;">
-    <div class="eyebrow">خطوة بخطوة</div>
-    <h2 class="section-title">تعلم الصلاة من الوضوء للتسليم</h2>
+    <div class="mini-title">تعلم الصلاة من الوضوء للتسليم</div>
     <div class="subtab-row" id="learnSubtabs">
       <button class="active" data-sub="wudu">الوضوء</button>
       <button data-sub="salah">الصلاة</button>
@@ -889,19 +867,15 @@
 /* ================= TABS ================= */
 const tabButtons = document.querySelectorAll('#tabs button');
 const bottomTabButtons = document.querySelectorAll('#bottomTabs button[data-tab]');
-const moreSheetButtons = document.querySelectorAll('#moreSheetPanel button[data-tab]');
-const moreSheetTabNames = Array.from(moreSheetButtons).map(b=> b.dataset.tab);
 const validTabNames = Array.from(tabButtons).map(b => b.dataset.tab).concat(['home']);
 
 function switchToTab(name, skipScroll){
   tabButtons.forEach(b=> b.classList.toggle('active', b.dataset.tab === name));
   bottomTabButtons.forEach(b=> b.classList.toggle('active', b.dataset.tab === name));
-  document.getElementById('moreTabBtn').classList.toggle('active', moreSheetTabNames.includes(name));
   document.querySelectorAll('main > section[id^="tab-"]').forEach(s=> s.style.display='none');
   document.getElementById('tab-'+name).style.display='block';
   history.replaceState(null, '', name === 'home' ? '#' : '#'+name);
   if(!skipScroll) window.scrollTo({top:0, behavior:'smooth'});
-  closeMoreSheet();
 }
 tabButtons.forEach(btn=>{
   btn.addEventListener('click', ()=> switchToTab(btn.dataset.tab));
@@ -910,15 +884,6 @@ bottomTabButtons.forEach(btn=>{
   btn.addEventListener('click', ()=> switchToTab(btn.dataset.tab));
 });
 document.getElementById('logoHome').addEventListener('click', ()=> switchToTab('home'));
-
-/* ---- "More" bottom-sheet ---- */
-function openMoreSheet(){ document.getElementById('moreSheet').classList.add('open'); }
-function closeMoreSheet(){ document.getElementById('moreSheet').classList.remove('open'); }
-document.getElementById('moreTabBtn').addEventListener('click', openMoreSheet);
-document.getElementById('moreSheetBackdrop').addEventListener('click', closeMoreSheet);
-moreSheetButtons.forEach(btn=>{
-  btn.addEventListener('click', ()=> switchToTab(btn.dataset.tab));
-});
 
 // Restore whichever tab the person was on before a page refresh
 const initialHash = location.hash.replace('#', '');
@@ -947,8 +912,7 @@ document.getElementById('dailyAyahText').textContent = dailyPicks[dayIndex];
 const homeTiles = [
   {tab:'quran', icon:'<path d="M12 6c-2-1-5-1-7 0v11c2-1 5-1 7 0 2-1 5-1 7 0V6c-2-1-5-1-7 0z"/><path d="M12 6v11"/>', title:'القرآن الكريم', desc:'تلاوة، استماع بصوت القراء، وتفسير كل آية.'},
   {tab:'adhkar', icon:'<circle cx="4" cy="12" r="1.5"/><circle cx="8.3" cy="8.5" r="1.5"/><circle cx="12.7" cy="7" r="1.5"/><circle cx="17" cy="8.5" r="1.5"/><circle cx="20" cy="12" r="1.5"/>', title:'الأذكار', desc:'أذكار الصباح والمساء وأكثر، بعدّاد تفاعلي.'},
-  {tab:'prayer', icon:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>', title:'مواقيت الصلاة', desc:'مواقيت دقيقة حسب موقعك، مع تنبيه أذان واتجاه القبلة.'},
-  {tab:'learn', icon:'<path d="M5 20v-6a7 7 0 0 1 14 0v6"/><path d="M3 20h18"/><path d="M12 3v3"/>', title:'تعلم الصلاة', desc:'خطوة بخطوة من الوضوء للتسليم.'},
+  {tab:'prayer', icon:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>', title:'الصلاة', desc:'مواقيت دقيقة، تنبيه أذان، اتجاه القبلة، وتعلم الصلاة خطوة بخطوة.'},
   {tab:'nasheed', icon:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>', title:'أناشيد', desc:'أناشيد بدون موسيقى تضيفها وتشغّلها بنفسك.'},
 ];
 function renderHomeGrid(){
@@ -1159,6 +1123,7 @@ const adhanVoices = [
 ];
 let adhanEnabled = false;
 let customAdhanUrl = null;
+let customAdhanYoutubeId = null;
 const adhanAudioEl = new Audio();
 
 function renderAdhanVoices(){
@@ -1166,6 +1131,57 @@ function renderAdhanVoices(){
     adhanVoices.map((v,idx)=>`<option value="${idx}">${v.label}</option>`).join('');
 }
 renderAdhanVoices();
+
+/* ---- search for a named sheikh's adhan on YouTube (shares the API key from the Nasheeds tab) ---- */
+async function runAdhanSearch(){
+  const query = document.getElementById('adhanSearchInput').value.trim();
+  const resultsEl = document.getElementById('adhanSearchResults');
+  if(!query) return;
+  if(typeof youtubeApiKey === 'undefined' || !youtubeApiKey){
+    resultsEl.innerHTML = '<div class="nasheed-empty">محتاج مفتاح YouTube API الأول — روح لقسم "أناشيد" وحطه هناك مرة واحدة، وهيشتغل هنا تلقائي بعد كده.</div>';
+    return;
+  }
+  resultsEl.innerHTML = '<div class="nasheed-empty">جاري البحث...</div>';
+  try{
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=6&q=${encodeURIComponent(query + ' أذان')}&key=${youtubeApiKey}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if(!res.ok || !data.items){
+      resultsEl.innerHTML = '<div class="nasheed-empty">تعذر البحث — تأكد إن المفتاح صحيح.</div>';
+      return;
+    }
+    if(data.items.length === 0){
+      resultsEl.innerHTML = '<div class="nasheed-empty">مفيش نتائج، جرّب اسم شيخ تاني.</div>';
+      return;
+    }
+    resultsEl.innerHTML = data.items.map((item, idx) => `
+      <div class="nasheed-search-item" data-idx="${idx}">
+        <img src="${item.snippet.thumbnails.default.url}" alt="">
+        <span class="ns-title">${item.snippet.title}</span>
+        <button class="ns-add" data-idx="${idx}">استخدام كأذان</button>
+      </div>
+    `).join('');
+    resultsEl.querySelectorAll('.ns-add').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const item = data.items[Number(btn.dataset.idx)];
+        customAdhanYoutubeId = item.id.videoId;
+        customAdhanUrl = null;
+        document.getElementById('customAdhanUrl').value = '';
+        const statusEl = document.getElementById('adhanStatus');
+        statusEl.textContent = `تم اختيار "${item.snippet.title}" كأذان. دوس "تفعيل تنبيه الأذان" عشان يتفعّل.`;
+        document.getElementById('adhanToggleBtn').classList.remove('active');
+        document.getElementById('adhanToggleBtn').textContent = 'تفعيل تنبيه الأذان';
+        adhanEnabled = false;
+      });
+    });
+  }catch(e){
+    resultsEl.innerHTML = '<div class="nasheed-empty">حصل خطأ أثناء البحث. جرّب تاني.</div>';
+  }
+}
+document.getElementById('adhanSearchBtn').addEventListener('click', runAdhanSearch);
+document.getElementById('adhanSearchInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') runAdhanSearch();
+});
 
 function getSelectedAdhanUrl(){
   if(customAdhanUrl) return customAdhanUrl;
@@ -1187,6 +1203,17 @@ function tryUnlockUrl(url){
 
 function playAdhan(){
   if(!adhanEnabled) return;
+  if(customAdhanYoutubeId){
+    const fallback = document.getElementById('adhanYoutubeFallback');
+    fallback.style.display = 'block';
+    fallback.innerHTML = `
+      <div style="background:var(--gold); color:var(--night); padding:14px 16px; border-radius:14px; font-weight:700; margin-bottom:10px;">
+        🔔 حان وقت الصلاة — دوس تشغيل الفيديو عشان تسمع الأذان
+      </div>
+      <iframe width="100%" height="200" style="border-radius:14px; border:none;" src="https://www.youtube.com/embed/${customAdhanYoutubeId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    `;
+    return;
+  }
   adhanAudioEl.src = getSelectedAdhanUrl();
   adhanAudioEl.currentTime = 0;
   adhanAudioEl.play().catch(()=>{
@@ -1199,6 +1226,16 @@ document.getElementById('adhanToggleBtn').addEventListener('click', async (e)=>{
   const statusEl = document.getElementById('adhanStatus');
   btn.disabled = true;
   statusEl.textContent = 'جاري التحقق من الصوت...';
+
+  // Adhan by a chosen sheikh via YouTube — can't silently unlock autoplay, so enable directly.
+  if(customAdhanYoutubeId){
+    adhanEnabled = true;
+    btn.disabled = false;
+    btn.classList.add('active');
+    btn.textContent = 'تنبيه الأذان مفعّل ✓';
+    statusEl.textContent = 'هيظهرلك تنبيه بزرار تشغيل عند دخول وقت كل صلاة (فيديوهات يوتيوب مش دايماً بتشتغل تلقائي 100% بسبب سياسات المتصفح).';
+    return;
+  }
 
   // If a custom URL was provided, try that first and only.
   if(customAdhanUrl){
@@ -1245,7 +1282,9 @@ document.getElementById('adhanTestBtn').addEventListener('click', ()=>{
 
 document.getElementById('adhanVoiceSelect').addEventListener('change', ()=>{
   customAdhanUrl = null;
+  customAdhanYoutubeId = null;
   document.getElementById('customAdhanUrl').value = '';
+  document.getElementById('adhanYoutubeFallback').style.display = 'none';
   if(adhanEnabled){
     document.getElementById('adhanStatus').textContent = 'تم تغيير الصوت. اضغط "تجربة الصوت" للتأكد إنه بيشتغل صح.';
   }
@@ -1256,6 +1295,8 @@ document.getElementById('customAdhanSave').addEventListener('click', ()=>{
   const statusEl = document.getElementById('adhanStatus');
   if(!val){ statusEl.textContent = 'الصق رابط MP3 صحيح أولاً.'; return; }
   customAdhanUrl = val;
+  customAdhanYoutubeId = null;
+  document.getElementById('adhanYoutubeFallback').style.display = 'none';
   statusEl.textContent = 'تم حفظ الرابط. دوس "تفعيل تنبيه الأذان" عشان نتأكد إنه شغال.';
   document.getElementById('adhanToggleBtn').classList.remove('active');
   document.getElementById('adhanToggleBtn').textContent = 'تفعيل تنبيه الأذان';
