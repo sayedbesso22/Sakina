@@ -346,6 +346,10 @@
     font-family:'Cairo'; padding:8px 12px; border-radius:10px;
     border:1.5px solid var(--parchment-2); background:#fff; flex:1; min-width:160px;
   }
+  .audio-bar input[type=text]{
+    font-family:'Cairo'; padding:8px 12px; border-radius:10px;
+    border:1.5px solid var(--parchment-2); background:#fff; flex:1; min-width:140px;
+  }
   .audio-bar audio{ flex:2; min-width:220px; height:38px; }
   .ayah-block{
     font-family:'Amiri Quran', serif;
@@ -756,68 +760,78 @@
 
   <!-- PRAYER TAB (detailed) -->
   <section id="tab-prayer" style="display:none;">
-    <div class="eyebrow">مواقيت اليوم</div>
-    <h2 class="section-title">مواقيت الصلاة</h2>
-    <p style="color:var(--ink-soft); margin-bottom:18px; line-height:1.9;">
-      المواقيت المعروضة أعلى الصفحة تُحسب تلقائياً بناءً على موقعك الجغرافي. إن لم تسمح المتصفح بتحديد الموقع، تُعرض مواقيت القاهرة كافتراضي.
-    </p>
-    <button class="chip" id="retryLocation" style="margin-bottom:24px;">إعادة تحديد الموقع</button>
+    <div class="eyebrow" id="prayerSectionEyebrow">مواقيت اليوم</div>
+    <h2 class="section-title" id="prayerSectionTitle">مواقيت الصلاة</h2>
 
-    <div class="adhan-card">
-      <div class="mini-title" style="margin-top:0;">🔔 تنبيه الأذان</div>
-      <p style="color:var(--ink-soft); font-size:0.9rem; line-height:1.8;">
-        فعّل التنبيه عشان يشتغل صوت الأذان تلقائياً في المتصفح لما يدخل وقت أي صلاة، واختر الصوت اللي يريحك. لازم تفعّله بزرار حقيقي عشان المتصفح يسمح بتشغيل الصوت تلقائياً بعد كده.
-      </p>
-      <div class="adhan-row">
-        <button id="adhanToggleBtn" class="chip">تفعيل تنبيه الأذان</button>
-        <select id="adhanVoiceSelect"></select>
-        <button id="adhanTestBtn" class="chip">تجربة الصوت</button>
-      </div>
-      <div id="adhanStatus" style="color:var(--ink-soft); font-size:0.85rem; margin-top:8px;"></div>
-
-      <div class="mini-title" style="font-size:0.92rem;">🔍 دوّر على أذان بصوت شيخ معيّن</div>
-      <p style="color:var(--ink-soft); font-size:0.85rem; line-height:1.8;">
-        اكتب اسم الشيخ (مثلاً: النقشبندي، ياسر الدوسري) ودوّر جوه يوتيوب من هنا مباشرة، واستخدمه كأذان. بيستخدم نفس مفتاح يوتيوب اللي في قسم الأناشيد.
-        ملحوظة: أذان يوتيوب ممكن مايشتغلش تلقائي 100% بسبب سياسات المتصفح — هيظهرلك زرار تشغيل يدوي وقت الصلاة لو حصل كده.
-      </p>
-      <div class="adhan-row">
-        <input type="text" id="adhanSearchInput" placeholder="اسم الشيخ...">
-        <button id="adhanSearchBtn" class="chip">بحث</button>
-      </div>
-      <div id="adhanSearchResults" class="nasheed-search-results"></div>
-
-      <div class="adhan-row" style="margin-top:14px;">
-        <input type="text" id="customAdhanUrl" placeholder="أو الصق رابط ملف أذان MP3 مباشر (اختياري)" style="flex:1; min-width:220px; font-family:'Cairo'; padding:9px 12px; border-radius:12px; border:1.5px solid var(--parchment-2);">
-        <button id="customAdhanSave" class="chip">استخدام هذا الرابط</button>
-      </div>
-      <div id="adhanYoutubeFallback" style="display:none; margin-top:14px;"></div>
+    <div class="subtab-row" id="prayerMainSubtabs">
+      <button class="active" data-psub="times">🕌 المواقيت والأذان والقبلة</button>
+      <button data-psub="learn">📖 تعلم الصلاة خطوة بخطوة</button>
     </div>
 
-    <div class="qibla-card">
-      <div class="mini-title" style="margin-top:0;">🕋 اتجاه القبلة</div>
-      <div class="qibla-wrap">
-        <div class="qibla-compass" id="qiblaCompass">
-          <span class="n-label">شمال</span>
-          <div class="qibla-arrow" id="qiblaArrow"></div>
+    <div id="prayerTimesView">
+      <p style="color:var(--ink-soft); margin-bottom:18px; line-height:1.9;">
+        المواقيت المعروضة أعلى الصفحة تُحسب تلقائياً بناءً على موقعك الجغرافي. إن لم تسمح المتصفح بتحديد الموقع، تُعرض مواقيت القاهرة كافتراضي.
+      </p>
+      <button class="chip" id="retryLocation" style="margin-bottom:24px;">إعادة تحديد الموقع</button>
+
+      <div class="adhan-card">
+        <div class="mini-title" style="margin-top:0;">🔔 تنبيه الأذان</div>
+        <p style="color:var(--ink-soft); font-size:0.9rem; line-height:1.8;">
+          فعّل التنبيه عشان يشتغل صوت الأذان تلقائياً في المتصفح لما يدخل وقت أي صلاة، واختر الصوت اللي يريحك. لازم تفعّله بزرار حقيقي عشان المتصفح يسمح بتشغيل الصوت تلقائياً بعد كده.
+          هيظهرلك كمان تنبيه على الشاشة باسم الصلاة حتى لو الصوت مقفول أو الموقع مش فاتح قدامك.
+        </p>
+        <div class="adhan-row">
+          <button id="adhanToggleBtn" class="chip">تفعيل تنبيه الأذان</button>
+          <select id="adhanVoiceSelect"></select>
+          <button id="adhanTestBtn" class="chip">تجربة الصوت</button>
         </div>
-        <div>
-          <div class="qibla-degree" id="qiblaDegree">—</div>
-          <div class="qibla-desc">
-            الزاوية محسوبة من موقعك الحالي باتجاه الكعبة بمكة المكرمة، بالنسبة للشمال الجغرافي.
-            على الموبايل تقدر تدوس "تفعيل البوصلة" عشان السهم يتحرك مع اتجاه جهازك فعلياً.
+        <div id="adhanStatus" style="color:var(--ink-soft); font-size:0.85rem; margin-top:8px;"></div>
+
+        <div class="mini-title" style="font-size:0.92rem;">🔍 دوّر على أذان بصوت شيخ معيّن</div>
+        <p style="color:var(--ink-soft); font-size:0.85rem; line-height:1.8;">
+          اكتب اسم الشيخ (مثلاً: النقشبندي، ياسر الدوسري) ودوّر جوه يوتيوب من هنا مباشرة، واستخدمه كأذان. بيستخدم نفس مفتاح يوتيوب اللي في قسم الأناشيد.
+          ملحوظة: أذان يوتيوب ممكن مايشتغلش تلقائي 100% بسبب سياسات المتصفح — هيظهرلك زرار تشغيل يدوي وقت الصلاة لو حصل كده.
+        </p>
+        <div class="adhan-row">
+          <input type="text" id="adhanSearchInput" placeholder="اسم الشيخ...">
+          <button id="adhanSearchBtn" class="chip">بحث</button>
+        </div>
+        <div id="adhanSearchResults" class="nasheed-search-results"></div>
+
+        <div class="adhan-row" style="margin-top:14px;">
+          <input type="text" id="customAdhanUrl" placeholder="أو الصق رابط ملف أذان MP3 مباشر (اختياري)" style="flex:1; min-width:220px; font-family:'Cairo'; padding:9px 12px; border-radius:12px; border:1.5px solid var(--parchment-2);">
+          <button id="customAdhanSave" class="chip">استخدام هذا الرابط</button>
+        </div>
+        <div id="adhanYoutubeFallback" style="display:none; margin-top:14px;"></div>
+      </div>
+
+      <div class="qibla-card">
+        <div class="mini-title" style="margin-top:0;">🕋 اتجاه القبلة</div>
+        <div class="qibla-wrap">
+          <div class="qibla-compass" id="qiblaCompass">
+            <span class="n-label">شمال</span>
+            <div class="qibla-arrow" id="qiblaArrow"></div>
           </div>
-          <button class="chip" id="qiblaCompassBtn" style="margin-top:10px;">تفعيل البوصلة</button>
+          <div>
+            <div class="qibla-degree" id="qiblaDegree">—</div>
+            <div class="qibla-desc">
+              الزاوية محسوبة من موقعك الحالي باتجاه الكعبة بمكة المكرمة، بالنسبة للشمال الجغرافي.
+              على الموبايل تقدر تدوس "تفعيل البوصلة" عشان السهم يتحرك مع اتجاه جهازك فعلياً.
+            </div>
+            <button class="chip" id="qiblaCompassBtn" style="margin-top:10px;">تفعيل البوصلة</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="mini-title">تعلم الصلاة من الوضوء للتسليم</div>
-    <div class="subtab-row" id="learnSubtabs">
-      <button class="active" data-sub="wudu">الوضوء</button>
-      <button data-sub="salah">الصلاة</button>
+    <div id="prayerLearnView" style="display:none;">
+      <div class="subtab-row" id="learnSubtabs">
+        <button class="active" data-sub="wudu">الوضوء</button>
+        <button data-sub="salah">الصلاة</button>
+      </div>
+      <div id="learnWudu" class="timeline"></div>
+      <div id="learnSalah" class="timeline" style="display:none;"></div>
     </div>
-    <div id="learnWudu" class="timeline"></div>
-    <div id="learnSalah" class="timeline" style="display:none;"></div>
   </section>
 
   <!-- NASHEEDS TAB -->
@@ -1070,7 +1084,8 @@ function tickCountdown(){
   const s = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
   document.getElementById('countdownTime').textContent = `${h}:${m}:${s}`;
   if(diff <= 0){
-    playAdhan();
+    const startedPrayerName = document.getElementById('nextPrayerName').textContent;
+    playAdhan(startedPrayerName);
     renderPrayerGrid();
   }
 }
@@ -1201,8 +1216,19 @@ function tryUnlockUrl(url){
   });
 }
 
-function playAdhan(){
+function showPrayerNotification(prayerName){
+  if(typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+  try{
+    new Notification('حان وقت الصلاة 🕌', {
+      body: `حان الآن وقت صلاة ${prayerName || ''}`,
+      icon: 'icon-192.png'
+    });
+  }catch(e){}
+}
+
+function playAdhan(prayerName){
   if(!adhanEnabled) return;
+  showPrayerNotification(prayerName);
   if(customAdhanYoutubeId){
     const fallback = document.getElementById('adhanYoutubeFallback');
     fallback.style.display = 'block';
@@ -1226,6 +1252,10 @@ document.getElementById('adhanToggleBtn').addEventListener('click', async (e)=>{
   const statusEl = document.getElementById('adhanStatus');
   btn.disabled = true;
   statusEl.textContent = 'جاري التحقق من الصوت...';
+
+  if(typeof Notification !== 'undefined' && Notification.permission === 'default'){
+    try{ await Notification.requestPermission(); }catch(e){}
+  }
 
   // Adhan by a chosen sheikh via YouTube — can't silently unlock autoplay, so enable directly.
   if(customAdhanYoutubeId){
@@ -1436,6 +1466,18 @@ document.querySelectorAll('#learnSubtabs button').forEach(btn=>{
   });
 });
 
+document.querySelectorAll('#prayerMainSubtabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#prayerMainSubtabs button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const isTimes = btn.dataset.psub === 'times';
+    document.getElementById('prayerTimesView').style.display = isTimes ? 'block' : 'none';
+    document.getElementById('prayerLearnView').style.display = isTimes ? 'none' : 'block';
+    document.getElementById('prayerSectionEyebrow').textContent = isTimes ? 'مواقيت اليوم' : 'خطوة بخطوة';
+    document.getElementById('prayerSectionTitle').textContent = isTimes ? 'مواقيت الصلاة' : 'تعلم الصلاة من الوضوء للتسليم';
+  });
+});
+
 /* ================= QURAN ================= */
 let allSurahs = [];
 async function loadSurahList(){
@@ -1489,28 +1531,59 @@ async function loadReciters(){
   }
 }
 
+let reciterSearchQuery = '';
+
 function buildAudioBarHtml(){
   if(!recitersList.length){
     return `<div class="audio-bar"><span style="color:var(--ink-soft); font-size:0.85rem;">تعذّر تحميل قائمة القراء، جرب تحدّث الصفحة.</span></div>`;
   }
-  const options = recitersList.map((r, idx)=>
-    `<option value="${idx}" ${idx===selectedReciterIndex?'selected':''}>${r.name}</option>`
-  ).join('');
   return `
     <div class="audio-bar">
       <label>استمع بصوت:</label>
-      <select id="reciterSelect">${options}</select>
+      <input type="text" id="reciterSearchInput" placeholder="دوّر باسم الشيخ...">
+      <select id="reciterSelect"></select>
       <audio id="quranAudio" controls></audio>
+      <a id="quranDownloadBtn" download class="chip" style="text-decoration:none;">⬇ تحميل</a>
     </div>
   `;
 }
 
-function wireAudioBar(){
+function renderReciterOptions(){
   const sel = document.getElementById('reciterSelect');
+  if(!sel) return;
+  const q = reciterSearchQuery.trim();
+  const filtered = q ? recitersList.filter(r => r.name.includes(q)) : recitersList;
+  if(filtered.length === 0){
+    sel.innerHTML = `<option value="">لا يوجد قارئ بهذا الاسم</option>`;
+    return;
+  }
+  // keep the currently selected reciter selected if it's still in the filtered set
+  const currentReciter = recitersList[selectedReciterIndex];
+  sel.innerHTML = filtered.map((r)=>{
+    const realIdx = recitersList.indexOf(r);
+    const isSelected = currentReciter && r === currentReciter;
+    return `<option value="${realIdx}" ${isSelected?'selected':''}>${r.name}</option>`;
+  }).join('');
+  if(!currentReciter || !filtered.includes(currentReciter)){
+    selectedReciterIndex = recitersList.indexOf(filtered[0]);
+    updateAudioSrc();
+  }
+}
+
+function wireAudioBar(){
+  renderReciterOptions();
+  const sel = document.getElementById('reciterSelect');
+  const searchInput = document.getElementById('reciterSearchInput');
   if(sel){
     sel.addEventListener('change', ()=>{
       selectedReciterIndex = Number(sel.value);
       updateAudioSrc();
+    });
+  }
+  if(searchInput){
+    searchInput.addEventListener('input', ()=>{
+      reciterSearchQuery = searchInput.value;
+      renderReciterOptions();
     });
   }
   updateAudioSrc();
@@ -1519,12 +1592,18 @@ function wireAudioBar(){
 function updateAudioSrc(){
   if(currentSurahNumber == null || !recitersList.length) return;
   const audio = document.getElementById('quranAudio');
+  const downloadBtn = document.getElementById('quranDownloadBtn');
   if(!audio) return;
   const reciter = recitersList[selectedReciterIndex];
   if(!reciter) return;
   const moshaf = reciter.moshaf[0];
   const padded = String(currentSurahNumber).padStart(3,'0');
-  audio.src = moshaf.server + padded + '.mp3';
+  const src = moshaf.server + padded + '.mp3';
+  audio.src = src;
+  if(downloadBtn){
+    downloadBtn.href = src;
+    downloadBtn.download = `${reciter.name} - سورة ${currentSurahNumber}.mp3`;
+  }
 }
 
 loadReciters();
