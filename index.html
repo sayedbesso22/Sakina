@@ -386,6 +386,7 @@
   }
   .hifz-correct{ color:var(--night); }
   .hifz-missed{ color:var(--danger); text-decoration:underline; text-decoration-color:var(--danger); text-decoration-style:wavy; }
+  .hifz-pending{ color:var(--ink-soft); opacity:0.55; }
 
   /* ---------- adhan + qibla ---------- */
   .adhan-card, .qibla-card{
@@ -1083,6 +1084,10 @@ function tickCountdown(){
   const m = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
   const s = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
   document.getElementById('countdownTime').textContent = `${h}:${m}:${s}`;
+  const nextName = document.getElementById('nextPrayerName').textContent;
+  if(nextName && nextName !== '—'){
+    document.title = `${h}:${m}:${s} حتى ${nextName} — سكينة`;
+  }
   if(diff <= 0){
     const startedPrayerName = document.getElementById('nextPrayerName').textContent;
     playAdhan(startedPrayerName);
@@ -1138,7 +1143,7 @@ const adhanVoices = [
 ];
 let adhanEnabled = false;
 let customAdhanUrl = null;
-let customAdhanYoutubeId = null;
+let customAdhanYoutubeId = 'SI4CScs4D2Q'; // user-provided adhan link, pre-configured as default
 const adhanAudioEl = new Audio();
 
 function renderAdhanVoices(){
@@ -1146,6 +1151,7 @@ function renderAdhanVoices(){
     adhanVoices.map((v,idx)=>`<option value="${idx}">${v.label}</option>`).join('');
 }
 renderAdhanVoices();
+document.getElementById('adhanStatus').textContent = 'في أذان جاهز ومحطوط بالفعل — بس دوس "تفعيل تنبيه الأذان" عشان يشتغل.';
 
 /* ---- search for a named sheikh's adhan on YouTube (shares the API key from the Nasheeds tab) ---- */
 async function runAdhanSearch(){
@@ -1660,12 +1666,12 @@ function buildHifzPanelHtml(){
   return `
     <div class="hifz-panel">
       <p style="color:var(--ink-soft); font-size:0.88rem; margin-bottom:12px; line-height:1.8;">
-        دوس "ابدأ تسميع السورة كاملة" وسمّع السورة من حفظك من أولها لآخرها بصوت واضح — النص هيفضل مخفي عنك طول الاختبار. لما تخلص دوس "إنهاء والمقارنة" وهتشوف السورة كاملة بالألوان: الكلام الصح والكلام الناقص أو الغلط.
-        محتاج إذن الميكروفون، وبتشتغل على Chrome (كمبيوتر أو أندرويد) بشكل أفضل — مش كل المتصفحات بتدعمها.
+        دوس "ابدأ" وسمّع من حفظك — النص هيفضل مخفي عنك طول الاختبار. كل كلمة تقولها هتتلوّن فوراً وانت بتتكلم (صح أو غلط)، مش لازم تخلّص السورة كلها عشان تشوف النتيجة.
+        محتاج إذن الميكروفون، وبتشتغل على Chrome (كمبيوتر أو أندرويد) بشكل أفضل — للأسف مش مدعومة على Safari / آيفون حالياً.
       </p>
       <div class="hifz-controls">
-        <button id="hifzStartBtn" class="chip active">🎤 ابدأ تسميع السورة كاملة</button>
-        <button id="hifzStopBtn" class="chip" style="display:none;">⏹ إنهاء والمقارنة</button>
+        <button id="hifzStartBtn" class="chip active">🎤 ابدأ</button>
+        <button id="hifzStopBtn" class="chip" style="display:none;">⏹ إيقاف</button>
       </div>
       <div id="hifzStatus" style="margin-top:10px; color:var(--ink-soft); font-size:0.88rem;"></div>
       <div id="hifzResult" style="margin-top:14px;"></div>
@@ -1687,7 +1693,7 @@ function toggleHifz(){
     if(ayahContainer) ayahContainer.style.display = 'none';
     if(bismillahEl) bismillahEl.style.display = 'none';
   } else {
-    if(hifzRecognition){ hifzRecognition.stop(); hifzRecognition = null; }
+    if(hifzRecognition){ hifzRecognition.onend = null; hifzRecognition.stop(); hifzRecognition = null; }
     btn.textContent = '🎙️ اختبار الحفظ';
     container.innerHTML = '';
     if(ayahContainer) ayahContainer.style.display = 'block';
@@ -1724,36 +1730,32 @@ function lcsMask(a, b){
   return mask;
 }
 
-function compareHifzFullSurah(spokenRaw, statusEl, resultEl){
-  const spoken = normalizeArabic(spokenRaw).split(' ').filter(Boolean);
-  const actualFlatNormalized = [];
-  const ayahBoundaries = []; // number of normalized words per ayah, in order
-  currentAyahsData.forEach(a=>{
-    const words = normalizeArabic(a.text).split(' ').filter(Boolean);
-    ayahBoundaries.push(words.length);
-    actualFlatNormalized.push(...words);
-  });
+let hifzActualFlatNormalized = [];
+let hifzAyahBoundaries = [];
 
-  const matched = lcsMask(actualFlatNormalized, spoken);
+function renderHifzLive(spokenRaw, statusEl, resultEl){
+  const spoken = normalizeArabic(spokenRaw).split(' ').filter(Boolean);
+  const matched = lcsMask(hifzActualFlatNormalized, spoken);
   const correctCount = matched.filter(Boolean).length;
-  const pct = actualFlatNormalized.length ? Math.round((correctCount/actualFlatNormalized.length)*100) : 0;
-  statusEl.textContent = `النتيجة: ${pct}% مطابقة من السورة كاملة`;
+  const pct = hifzActualFlatNormalized.length ? Math.round((correctCount/hifzActualFlatNormalized.length)*100) : 0;
+  statusEl.textContent = `🎤 جاري الاستماع... ${pct}% من السورة صح لحد دلوقتي`;
 
   let cursor = 0;
   let html = '';
   currentAyahsData.forEach((a, ayahIdx)=>{
     const originalWords = a.text.trim().split(/\s+/);
-    const wordCount = ayahBoundaries[ayahIdx];
+    const wordCount = hifzAyahBoundaries[ayahIdx];
     const ayahMask = matched.slice(cursor, cursor + wordCount);
+    const ayahTouched = ayahMask.some(Boolean);
     cursor += wordCount;
     html += `<div class="ayah-block">`;
     originalWords.forEach((w, i)=>{
-      html += `<span class="${ayahMask[i] ? 'hifz-correct' : 'hifz-missed'}">${w}</span> `;
+      const cls = ayahMask[i] ? 'hifz-correct' : (ayahTouched ? 'hifz-missed' : 'hifz-pending');
+      html += `<span class="${cls}">${w}</span> `;
     });
     html += `<span class="ayah-num">${ayahIdx+1}</span></div>`;
   });
-  resultEl.innerHTML = `<div class="hifz-diff">${html}</div>
-    <div style="margin-top:10px; color:var(--ink-soft); font-size:0.85rem;">اللي سمعته منك: "${spokenRaw}"</div>`;
+  resultEl.innerHTML = `<div class="hifz-diff">${html}</div>`;
 }
 
 function startHifzTest(){
@@ -1764,51 +1766,73 @@ function startHifzTest(){
 
   const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SpeechRecognitionAPI){
-    statusEl.textContent = 'المتصفح ده مش بيدعم التعرف على الصوت. جرّب Chrome على أندرويد أو الكمبيوتر.';
+    statusEl.textContent = 'المتصفح ده مش بيدعم التعرف على الصوت. جرّب Chrome على أندرويد أو الكمبيوتر (مش مدعومة على Safari / آيفون).';
     return;
   }
 
   hifzFinalTranscript = '';
+  hifzActualFlatNormalized = [];
+  hifzAyahBoundaries = [];
+  currentAyahsData.forEach(a=>{
+    const words = normalizeArabic(a.text).split(' ').filter(Boolean);
+    hifzAyahBoundaries.push(words.length);
+    hifzActualFlatNormalized.push(...words);
+  });
+
   resultEl.innerHTML = '';
   startBtn.style.display = 'none';
   stopBtn.style.display = 'inline-block';
-  statusEl.textContent = '🎤 جاري الاستماع... سمّع السورة كاملة من أولها.';
+  statusEl.textContent = '🎤 جاري الاستماع... ابدأ التسميع.';
 
   hifzRecognition = new SpeechRecognitionAPI();
   hifzRecognition.lang = 'ar-SA';
   hifzRecognition.continuous = true;
-  hifzRecognition.interimResults = false;
+  hifzRecognition.interimResults = true;
   hifzRecognition.maxAlternatives = 1;
 
   hifzRecognition.onresult = (event)=>{
-    for(let i = event.resultIndex; i < event.results.length; i++){
+    let finalPart = '';
+    let interim = '';
+    for(let i = 0; i < event.results.length; i++){
       if(event.results[i].isFinal){
-        hifzFinalTranscript += (hifzFinalTranscript ? ' ' : '') + event.results[i][0].transcript;
+        finalPart += event.results[i][0].transcript + ' ';
+      } else {
+        interim += event.results[i][0].transcript + ' ';
       }
     }
+    hifzFinalTranscript = finalPart.trim();
+    renderHifzLive((finalPart + ' ' + interim).trim(), statusEl, resultEl);
   };
   hifzRecognition.onerror = (event)=>{
     if(event.error === 'not-allowed'){
       statusEl.textContent = 'محتاج تسمح باستخدام الميكروفون عشان الميزة دي تشتغل.';
+      stopHifzTest();
     } else if(event.error === 'no-speech'){
       // keep listening — continuous mode tolerates brief pauses
+    } else if(event.error === 'aborted'){
+      // normal on manual stop
     } else {
-      statusEl.textContent = 'حصل خطأ أثناء الاستماع، جرّب تاني.';
+      statusEl.textContent = 'حصل خطأ أثناء الاستماع (' + event.error + '). دوس ابدأ تاني.';
     }
   };
   hifzRecognition.onend = ()=>{
-    // Some browsers auto-stop continuous recognition after a silence — restart seamlessly if still active
-    if(startBtn.style.display === 'none' && hifzRecognition){
+    // Some browsers auto-stop continuous recognition after a silence — restart seamlessly if still listening
+    if(stopBtn.style.display !== 'none' && hifzRecognition){
       try{ hifzRecognition.start(); }catch(e){}
     }
   };
 
-  hifzRecognition.start();
+  try{
+    hifzRecognition.start();
+  }catch(e){
+    statusEl.textContent = 'تعذّر بدء الاستماع. جرّب تاني.';
+    startBtn.style.display = 'inline-block';
+    stopBtn.style.display = 'none';
+  }
 }
 
 function stopHifzTest(){
   const statusEl = document.getElementById('hifzStatus');
-  const resultEl = document.getElementById('hifzResult');
   const startBtn = document.getElementById('hifzStartBtn');
   const stopBtn = document.getElementById('hifzStopBtn');
 
@@ -1820,12 +1844,7 @@ function stopHifzTest(){
     hifzRecognition.stop();
     hifzRecognition = null;
   }
-
-  if(!hifzFinalTranscript.trim()){
-    statusEl.textContent = 'مسمعتش أي كلام. جرّب تاني وتأكد إن الميكروفون شغال.';
-    return;
-  }
-  compareHifzFullSurah(hifzFinalTranscript, statusEl, resultEl);
+  statusEl.textContent = 'تم إيقاف الاستماع. دوس "ابدأ" لو عايز تجرّب تاني.';
 }
 
 async function selectSurah(num, itemEl){
