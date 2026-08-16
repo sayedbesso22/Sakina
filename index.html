@@ -30,7 +30,10 @@
 <link rel="icon" href="icon-192.png" type="image/png">
 <title>سكينة — القرآن الكريم، الأذكار، مواقيت الصلاة والأذان، وتعلم الصلاة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@400;500;600;700;800&family=Reem+Kufi:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@400;500;600;700;800&family=Reem+Kufi:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@400;500;600;700;800&family=Reem+Kufi:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@400;500;600;700;800&family=Reem+Kufi:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -177,16 +180,20 @@
   #bottomTabs button{
     flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
     background:none; border:none; color:var(--sage);
-    font-family:'Cairo'; font-size:0.66rem; font-weight:600;
-    padding:6px 2px; border-radius:12px; cursor:pointer;
+    font-family:'Cairo'; font-size:0.62rem; font-weight:600;
+    padding:6px 1px; border-radius:12px; cursor:pointer;
   }
-  #bottomTabs button svg{ width:22px; height:22px; }
+  #bottomTabs button svg{ width:20px; height:20px; }
   #bottomTabs button.active{ color:var(--gold); }
 
   @media (max-width:760px){
     header nav#tabs{ display:none; }
     #bottomTabs{ display:flex; }
     main{ padding-bottom:90px; }
+  }
+  @media (max-width:360px){
+    #bottomTabs button{ font-size:0.56rem; }
+    #bottomTabs button svg{ width:18px; height:18px; }
   }
 
   main{ max-width:1100px; margin:0 auto; padding: 24px clamp(14px, 4vw, 20px) 80px; }
@@ -307,6 +314,30 @@
   /* ---------- quran ---------- */
   .quran-layout{ display:grid; grid-template-columns:260px 1fr; gap:24px; }
   @media (max-width:800px){ .quran-layout{ grid-template-columns:1fr; } }
+
+  /* ---------- hadith ---------- */
+  .hadith-layout{ display:grid; grid-template-columns:260px 1fr; gap:24px; }
+  @media (max-width:800px){ .hadith-layout{ grid-template-columns:1fr; } }
+  #hadithCollectionSelect{
+    width:100%; padding:10px 14px; border-radius:12px; margin-bottom:10px;
+    border:1.5px solid var(--parchment-2); background:#fff; font-family:'Cairo'; font-size:0.92rem;
+  }
+  .hadith-book-row{ display:flex; gap:8px; margin-bottom:10px; }
+  .hadith-book-row input{
+    flex:1; padding:9px 12px; border-radius:10px; border:1.5px solid var(--parchment-2);
+    font-family:'Cairo'; min-width:0;
+  }
+  #hadithSearchInput{
+    width:100%; padding:9px 12px; border-radius:10px; border:1.5px solid var(--parchment-2);
+    font-family:'Cairo'; background:#fff;
+  }
+  .hadith-reader{ min-height:300px; }
+  .hadith-block{ padding-bottom:20px; margin-bottom:20px; border-bottom:1px solid var(--parchment-2); }
+  .hadith-block:last-child{ border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .hadith-chapter{ font-family:'Reem Kufi', sans-serif; color:var(--sage); font-size:0.85rem; margin-bottom:8px; }
+  .hadith-text{ font-family:'Amiri Quran', serif; font-size:1.3rem; line-height:2.2; color:var(--ink); margin-bottom:10px; }
+  .hadith-meta{ display:flex; gap:14px; flex-wrap:wrap; font-size:0.82rem; color:var(--ink-soft); }
+  .hadith-meta .hadith-grade{ color:var(--sage); font-weight:700; }
   .surah-search{
     width:100%; padding:12px 16px; border-radius:14px;
     border:1.5px solid var(--parchment-2); background:#fff;
@@ -722,6 +753,7 @@
     <nav id="tabs">
       <button class="active" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6 8 6"/><path d="M6 10v9h12v-9"/></svg><span>الرئيسية</span></button>
       <button data-tab="quran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1-5-1-7 0v11c2-1 5-1 7 0 2-1 5-1 7 0V6c-2-1-5-1-7 0z"/><path d="M12 6v11"/></svg><span>القرآن الكريم</span></button>
+      <button data-tab="hadith"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v11H7a2 2 0 0 0-2 2 2 2 0 0 0 2 2h12"/><path d="M8 7h7M8 10.5h5"/></svg><span>الحديث الشريف</span></button>
       <button data-tab="adhkar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="4" cy="12" r="1.5"/><circle cx="8.3" cy="8.5" r="1.5"/><circle cx="12.7" cy="7" r="1.5"/><circle cx="17" cy="8.5" r="1.5"/><circle cx="20" cy="12" r="1.5"/></svg><span>الأذكار</span></button>
       <button data-tab="prayer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><span>مواقيت الصلاة</span></button>
       <button data-tab="nasheed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>أناشيد</span></button>
@@ -734,6 +766,7 @@
 <nav id="bottomTabs">
   <button class="active" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6 8 6"/><path d="M6 10v9h12v-9"/></svg><span>الرئيسية</span></button>
   <button data-tab="quran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1-5-1-7 0v11c2-1 5-1 7 0 2-1 5-1 7 0V6c-2-1-5-1-7 0z"/><path d="M12 6v11"/></svg><span>القرآن</span></button>
+  <button data-tab="hadith"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v11H7a2 2 0 0 0-2 2 2 2 0 0 0 2 2h12"/><path d="M8 7h7M8 10.5h5"/></svg><span>الحديث</span></button>
   <button data-tab="adhkar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="4" cy="12" r="1.5"/><circle cx="8.3" cy="8.5" r="1.5"/><circle cx="12.7" cy="7" r="1.5"/><circle cx="17" cy="8.5" r="1.5"/><circle cx="20" cy="12" r="1.5"/></svg><span>الأذكار</span></button>
   <button data-tab="prayer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><span>الصلاة</span></button>
   <button data-tab="nasheed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>أناشيد</span></button>
@@ -806,6 +839,29 @@
       <div class="arch-card quran-reader" id="quranReader">
         <div class="empty-note">اختر سورة من القائمة لبدء القراءة.</div>
       </div>
+    </div>
+  </section>
+
+  <!-- HADITH TAB -->
+  <section id="tab-hadith" style="display:none;">
+    <div class="eyebrow">من كتب السنة الصحيحة</div>
+    <h2 class="section-title">الحديث الشريف</h2>
+    <p style="color:var(--ink-soft); margin-bottom:16px; line-height:1.9;">
+      الأحاديث هنا بتيجي مباشرة من قاعدة بيانات مفتوحة وموثوقة لكتب السنة، بنص الراوي ودرجة الحديث زي ما هي بالظبط — من غير أي تدخل مني في النص، ومن غير ما تحتاج تعمل أي إعداد.
+    </p>
+
+    <div class="hadith-layout">
+      <div>
+        <div class="mini-title" style="margin-top:0;">اختر المصدر</div>
+        <select id="hadithCollectionSelect"></select>
+        <input type="text" id="hadithSearchInput" placeholder="دوّر جوه الأحاديث (بالنص أو اسم الراوي)...">
+      </div>
+      <div class="arch-card hadith-reader" id="hadithReader">
+        <div class="loading-note">جاري تحميل صحيح البخاري...</div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:18px;">
+      <button id="hadithLoadMoreBtn" class="chip" style="display:none;">تحميل المزيد من الأحاديث</button>
     </div>
   </section>
 
@@ -988,6 +1044,7 @@
 const tabButtons = document.querySelectorAll('#tabs button');
 const bottomTabButtons = document.querySelectorAll('#bottomTabs button[data-tab]');
 const validTabNames = Array.from(tabButtons).map(b => b.dataset.tab).concat(['home']);
+let hadithTabOpened = false; // declared early — switchToTab() can reference it safely on page-load hash restore
 
 function switchToTab(name, skipScroll){
   tabButtons.forEach(b=> b.classList.toggle('active', b.dataset.tab === name));
@@ -996,6 +1053,10 @@ function switchToTab(name, skipScroll){
   document.getElementById('tab-'+name).style.display='block';
   history.replaceState(null, '', name === 'home' ? '#' : '#'+name);
   if(!skipScroll) window.scrollTo({top:0, behavior:'smooth'});
+  if(name === 'hadith' && !hadithTabOpened){
+    hadithTabOpened = true;
+    loadHadithCollection();
+  }
 }
 tabButtons.forEach(btn=>{
   btn.addEventListener('click', ()=> switchToTab(btn.dataset.tab));
@@ -1031,6 +1092,7 @@ document.getElementById('dailyAyahText').textContent = dailyPicks[dayIndex];
 
 const homeTiles = [
   {tab:'quran', icon:'<path d="M12 6c-2-1-5-1-7 0v11c2-1 5-1 7 0 2-1 5-1 7 0V6c-2-1-5-1-7 0z"/><path d="M12 6v11"/>', title:'القرآن الكريم', desc:'تلاوة، استماع بصوت القراء، وتفسير كل آية.'},
+  {tab:'hadith', icon:'<path d="M4 19V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v11H7a2 2 0 0 0-2 2 2 2 0 0 0 2 2h12"/><path d="M8 7h7M8 10.5h5"/>', title:'الحديث الشريف', desc:'ابحث في كتب السنة الصحيحة بالراوي ودرجة الحديث.'},
   {tab:'adhkar', icon:'<circle cx="4" cy="12" r="1.5"/><circle cx="8.3" cy="8.5" r="1.5"/><circle cx="12.7" cy="7" r="1.5"/><circle cx="17" cy="8.5" r="1.5"/><circle cx="20" cy="12" r="1.5"/>', title:'الأذكار', desc:'أذكار الصباح والمساء وأكثر، بعدّاد تفاعلي.'},
   {tab:'prayer', icon:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>', title:'الصلاة', desc:'مواقيت دقيقة، تنبيه أذان، اتجاه القبلة، وتعلم الصلاة خطوة بخطوة.'},
   {tab:'nasheed', icon:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>', title:'أناشيد', desc:'أناشيد بدون موسيقى تضيفها وتشغّلها بنفسك.'},
@@ -1995,6 +2057,105 @@ async function selectSurah(num, itemEl){
   }
 }
 loadSurahList();
+
+/* ================= HADITH (keyless open hadith database — real sourced text only, never typed from memory) ================= */
+// Uses the open, keyless "hadith-api" CDN dataset (same free/keyless spirit as our Quran source).
+const hadithCollections = [
+  {slug:'ara-bukhari', name:'صحيح البخاري'},
+  {slug:'ara-muslim', name:'صحيح مسلم'},
+  {slug:'ara-abudawud', name:'سنن أبي داود'},
+  {slug:'ara-tirmidhi', name:'جامع الترمذي'},
+  {slug:'ara-nasai', name:'سنن النسائي'},
+  {slug:'ara-ibnmajah', name:'سنن ابن ماجه'},
+  {slug:'ara-riyadassalihin', name:'رياض الصالحين'},
+];
+let allHadithsForCollection = [];
+let hadithSearchActive = [];
+let hadithShownCount = 0;
+const HADITH_PAGE_SIZE = 20;
+
+function renderHadithCollections(){
+  document.getElementById('hadithCollectionSelect').innerHTML =
+    hadithCollections.map(c=>`<option value="${c.slug}">${c.name}</option>`).join('');
+}
+renderHadithCollections();
+
+function appendHadithBatch(){
+  const reader = document.getElementById('hadithReader');
+  const nextBatch = hadithSearchActive.slice(hadithShownCount, hadithShownCount + HADITH_PAGE_SIZE);
+  if(hadithShownCount === 0){ reader.innerHTML = ''; }
+  if(nextBatch.length === 0 && hadithShownCount === 0){
+    reader.innerHTML = '<div class="empty-note">مفيش أحاديث تطابق البحث ده.</div>';
+    document.getElementById('hadithLoadMoreBtn').style.display = 'none';
+    return;
+  }
+  reader.innerHTML += nextBatch.map(h => `
+    <div class="hadith-block">
+      <div class="hadith-text">${h.text}</div>
+      <div class="hadith-meta">
+        ${h.narrator ? `<span>🗣️ ${h.narrator}</span>` : ''}
+        ${h.grades ? `<span class="hadith-grade">✓ ${h.grades}</span>` : ''}
+        <span>#${h.number}</span>
+      </div>
+    </div>
+  `).join('');
+  hadithShownCount += nextBatch.length;
+  document.getElementById('hadithLoadMoreBtn').style.display =
+    hadithShownCount < hadithSearchActive.length ? 'inline-block' : 'none';
+}
+
+async function loadHadithCollection(){
+  if(!requireOnline()) return;
+  const reader = document.getElementById('hadithReader');
+  const collection = document.getElementById('hadithCollectionSelect').value;
+  const collectionName = hadithCollections.find(c => c.slug === collection).name;
+  reader.innerHTML = `<div class="loading-note">جاري تحميل ${collectionName}...</div>`;
+  document.getElementById('hadithLoadMoreBtn').style.display = 'none';
+  document.getElementById('hadithSearchInput').value = '';
+
+  try{
+    const url = `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${collection}.json`;
+    const res = await fetch(url);
+    if(!res.ok){
+      reader.innerHTML = '<div class="empty-note">تعذّر تحميل هذا المصدر حالياً. جرّب مصدراً آخر من القائمة.</div>';
+      return;
+    }
+    const data = await res.json();
+    const items = (data.hadiths || data.data || []);
+    allHadithsForCollection = items.map(h => ({
+      number: h.hadithnumber || h.arabicnumber || h.number || '',
+      text: h.text || h.body || '',
+      narrator: h.reference && h.reference.narrator ? h.reference.narrator : '',
+      grades: Array.isArray(h.grades) ? h.grades.map(g => `${g.name || ''}: ${g.grade || ''}`).join(' • ') : ''
+    })).filter(h => h.text);
+
+    if(allHadithsForCollection.length === 0){
+      reader.innerHTML = '<div class="empty-note">تعذّر إيجاد نصوص عربية في رد هذا المصدر — ممكن يكون شكل البيانات مختلف عن المتوقع. قولّي وهظبطه فوراً.</div>';
+      return;
+    }
+    hadithSearchActive = allHadithsForCollection;
+    hadithShownCount = 0;
+    appendHadithBatch();
+  }catch(e){
+    reader.innerHTML = navigator.onLine
+      ? '<div class="empty-note">حصل خطأ أثناء التحميل. جرّب تاني أو اختر مصدراً آخر.</div>'
+      : '<div class="empty-note">هذه الميزة تحتاج إلى اتصال بالإنترنت، يرجى الاتصال بالإنترنت والمحاولة مرة أخرى.</div>';
+  }
+}
+
+document.getElementById('hadithCollectionSelect').addEventListener('change', loadHadithCollection);
+document.getElementById('hadithLoadMoreBtn').addEventListener('click', appendHadithBatch);
+document.getElementById('hadithSearchInput').addEventListener('input', (e)=>{
+  const q = e.target.value.trim();
+  hadithSearchActive = q
+    ? allHadithsForCollection.filter(h => h.text.includes(q) || (h.narrator && h.narrator.includes(q)))
+    : allHadithsForCollection;
+  hadithShownCount = 0;
+  appendHadithBatch();
+});
+
+// (Auto-load on first open is now handled centrally inside switchToTab(), so it fires
+// from the nav buttons, the Home tile, and page-refresh hash-restore alike.)
 
 /* ================= ADHKAR ================= */
 const adhkarCategoryIcons = {
