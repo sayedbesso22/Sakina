@@ -393,26 +393,50 @@
     font-family:'Cairo', 'Noto Sans Arabic', Tahoma, Arial, sans-serif; font-size:0.95rem; margin-bottom:12px;
   }
   .surah-list{
-    max-height:520px; overflow-y:auto;
+    max-height:560px; overflow-y:auto;
     border-radius:16px; background:#fff; border:1px solid var(--parchment-2);
   }
   .surah-list-item{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:12px 16px; cursor:pointer;
+    display:flex; align-items:center; gap:12px;
+    padding:13px 16px; cursor:pointer;
     border-bottom:1px solid var(--parchment-2);
-    transition:background 0.2s ease;
+    transition:background 0.18s ease, transform 0.18s ease;
   }
   .surah-list-item:last-child{ border-bottom:none; }
-  .surah-list-item:hover{ background:var(--parchment); }
+  .surah-list-item:hover{ background:var(--parchment); transform:translateX(-2px); }
   .surah-list-item.active{ background:var(--gold-soft); }
   .surah-num{
-    width:28px; height:28px; border:1px solid var(--gold);
+    width:32px; height:32px; border:1.5px solid var(--gold);
     border-radius:50%; display:flex; align-items:center; justify-content:center;
-    font-size:0.75rem; color:var(--night); flex-shrink:0;
+    font-size:0.72rem; font-weight:700; color:var(--night); flex-shrink:0;
+    font-family:'Cairo', 'Noto Sans Arabic', Tahoma, Arial, sans-serif;
   }
-  .surah-name{ font-weight:600; }
-  .surah-meta{ font-size:0.75rem; color:var(--ink-soft); }
+  .surah-info{ flex:1; min-width:0; }
+  .surah-name{
+    font-weight:700; color:var(--night); font-size:0.98rem;
+    font-family:'Reem Kufi', 'Cairo', 'Noto Sans Arabic', Tahoma, Arial, sans-serif;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .surah-meta-row{ display:flex; align-items:center; gap:8px; margin-top:3px; }
+  .surah-meta{ font-size:0.74rem; color:var(--ink-soft); }
+  .surah-type-badge{
+    font-size:0.66rem; font-weight:700; padding:1px 8px; border-radius:8px;
+    color:var(--sage); background:rgba(90,130,110,0.12);
+  }
   .quran-reader{ min-height:400px; }
+  .reader-header{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding-bottom:18px; margin-bottom:20px; border-bottom:1px solid var(--parchment-2);
+  }
+  .reader-header .rh-name{
+    font-family:'Reem Kufi', 'Cairo', 'Noto Sans Arabic', Tahoma, Arial, sans-serif;
+    font-size:1.5rem; color:var(--night); font-weight:700;
+  }
+  .reader-header .rh-sub{ font-size:0.82rem; color:var(--ink-soft); margin-top:4px; }
+  .reader-header .rh-badge{
+    flex-shrink:0; font-size:0.78rem; font-weight:700; color:var(--sage);
+    background:rgba(90,130,110,0.12); padding:6px 14px; border-radius:10px;
+  }
   .quran-reader .bismillah{
     text-align:center; font-family:'Amiri Quran', 'Noto Naskh Arabic', 'Times New Roman', serif; font-size:1.4rem;
     color:var(--night); margin-bottom:22px; padding-bottom:16px;
@@ -1934,6 +1958,14 @@ async function loadSurahList(){
     document.getElementById('surahList').innerHTML = '<div class="loading-note">تعذّر تحميل قائمة السور. تحقق من اتصالك بالإنترنت.</div>';
   }
 }
+function cleanSurahName(rawName){
+  // The API returns names like "سُورَةُ الفَاتِحَةِ" — strip diacritics and the "سورة" prefix
+  // for a cleaner, more professional list (the full name is still used in the reader header).
+  let n = rawName.replace(/[\u064B-\u0652\u0670\u0640]/g, ''); // strip tashkeel + tatweel
+  n = n.replace(/^سورة\s*/,'').trim();
+  return n;
+}
+
 function renderSurahList(list){
   const container = document.getElementById('surahList');
   container.innerHTML = '';
@@ -1941,12 +1973,16 @@ function renderSurahList(list){
     const item = document.createElement('div');
     item.className = 'surah-list-item';
     item.dataset.num = s.number;
+    const typeLabel = s.revelationType === 'Meccan' ? 'مكية' : 'مدنية';
     item.innerHTML = `
-      <div style="display:flex; align-items:center; gap:10px;">
-        <span class="surah-num">${s.number}</span>
-        <span class="surah-name">${s.name}</span>
+      <span class="surah-num">${s.number}</span>
+      <div class="surah-info">
+        <div class="surah-name">${cleanSurahName(s.name)}</div>
+        <div class="surah-meta-row">
+          <span class="surah-type-badge">${typeLabel}</span>
+          <span class="surah-meta">${s.numberOfAyahs} آية</span>
+        </div>
       </div>
-      <span class="surah-meta">${s.numberOfAyahs} آية</span>
     `;
     item.addEventListener('click', ()=> selectSurah(s.number, item));
     container.appendChild(item);
@@ -1954,7 +1990,11 @@ function renderSurahList(list){
 }
 document.getElementById('surahSearch').addEventListener('input', (e)=>{
   const q = e.target.value.trim();
-  const filtered = allSurahs.filter(s => s.name.includes(q) || s.englishName.toLowerCase().includes(q.toLowerCase()));
+  const filtered = allSurahs.filter(s =>
+    cleanSurahName(s.name).includes(q) ||
+    s.name.includes(q) ||
+    s.englishName.toLowerCase().includes(q.toLowerCase())
+  );
   renderSurahList(filtered);
 });
 
@@ -2310,7 +2350,17 @@ async function selectSurah(num, itemEl){
       cacheSurah(surah);
     }
     currentAyahsData = surah.ayahs;
-    let html = buildAudioBarHtml();
+    const typeLabel = surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية';
+    let html = `
+      <div class="reader-header">
+        <div>
+          <div class="rh-name">سورة ${cleanSurahName(surah.name)}</div>
+          <div class="rh-sub">${surah.englishNameTranslation || ''} · ${surah.numberOfAyahs} آية</div>
+        </div>
+        <span class="rh-badge">${typeLabel}</span>
+      </div>
+    `;
+    html += buildAudioBarHtml();
     html += `<div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px;">
       <button id="tafsirToggleBtn" class="chip">📖 عرض تفسير السورة</button>
       <button id="hifzToggleBtn" class="chip">🎙️ اختبار الحفظ</button>
